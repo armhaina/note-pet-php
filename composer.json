@@ -32,6 +32,7 @@
     },
     "config": {
         "allow-plugins": {
+            "codeception/c3": true,
             "php-http/discovery": true,
             "symfony/flex": true,
             "symfony/runtime": true
@@ -82,6 +83,14 @@
         }
     },
     "require-dev": {
+        "codeception/c3": "^2.9",
+        "codeception/codeception": "^5.3",
+        "codeception/module-asserts": "^3.2",
+        "codeception/module-cli": "^2.0",
+        "codeception/module-doctrine": "^3.2",
+        "codeception/module-phpbrowser": "^3.0",
+        "codeception/module-rest": "^3.4",
+        "codeception/module-symfony": "^3.7",
         "doctrine/doctrine-fixtures-bundle": "*",
         "friendsofphp/php-cs-fixer": "^3.89",
         "phpstan/phpstan": "^2.1",
