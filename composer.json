@@ -11,6 +11,7 @@
         "doctrine/doctrine-bundle": "^2.18",
         "doctrine/doctrine-migrations-bundle": "^3.6",
         "doctrine/orm": "^3.5",
+        "dragonmantank/cron-expression": "^3.6",
         "easycorp/easyadmin-bundle": "*",
         "guzzlehttp/guzzle": "*",
         "php-ds/php-ds": "*",
@@ -20,10 +21,12 @@
         "symfony/dotenv": "7.3.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.3.*",
+        "symfony/messenger": "7.3.*",
         "symfony/monolog-bundle": "*",
         "symfony/property-access": "7.3.*",
         "symfony/property-info": "7.3.*",
         "symfony/runtime": "7.3.*",
+        "symfony/scheduler": "7.3.*",
         "symfony/serializer": "7.3.*",
         "symfony/yaml": "7.3.*"
     },
@@ -80,6 +83,8 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "*",
+        "friendsofphp/php-cs-fixer": "^3.89",
+        "phpstan/phpstan": "^2.1",
         "symfony/maker-bundle": "*",
         "symfony/stopwatch": "7.3.*",
         "symfony/web-profiler-bundle": "7.3.*"

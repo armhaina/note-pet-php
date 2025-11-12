@@ -15,6 +15,30 @@ stop-up: ## Остановить и запустить
 down-up: ## Удалить и запустить
 	make down && make up
 
+
+
+migrations-create: ## Создать файл миграции
+	docker compose exec -it application php bin/console make:migration -n
+
+migrations-up: ## Накатить миграции
+	docker compose exec -it application php bin/console doctrine:migrations:migrate -n
+
+migrations-down: ## Откатить миграции
+	docker compose exec -it application php bin/console doctrine:migrations:migrate 'prev' -n
+
+
+
+schedule-run:
+	docker compose exec -it application php bin/console messenger:consume -vv
+
+schedule-stop:
+	docker compose exec -it application php bin/console messenger:stop-workers
+
+schedule-debug:
+	docker compose exec -it application php bin/console debug:schedule
+
+
+
 cache-clear:
 	make cache-clear-insert
 	docker compose exec -it application chmod -R 777 var
@@ -23,5 +47,13 @@ cache-clear-insert:
 	docker compose exec -it application rm -rf var
 	docker compose exec -it application php bin/console cache:clear
     docker compose exec -it application php bin/console cache:warmup
+
+
+
+phpcs:
+	docker compose exec -it application php vendor/bin/php-cs-fixer fix --allow-risky=yes
+
+phpstan:
+	docker compose exec -it application php vendor/bin/phpstan analyse src
 
 .PHONY: test-init

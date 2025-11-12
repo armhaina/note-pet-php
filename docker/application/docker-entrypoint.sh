@@ -156,6 +156,11 @@ if [ -n "${APPLE_SILICON+x}" ] && [ "${APPLE_SILICON}" -eq "1" ]; then
 fi
 # endregion
 
+# region Установить lefthook
+npm install lefthook --save-dev
+node_modules/.bin/lefthook install
+# endregion
+
 # region Запустить supervisor
 supervisord -n -c /etc/supervisor/conf.d/supervisord.conf
 # endregion

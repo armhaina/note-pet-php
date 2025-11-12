@@ -1,0 +1,27 @@
+<?php
+
+$rules = [
+    '@Symfony' => true,
+    '@PSR12' => true,
+    '@PhpCsFixer' => true,
+    'array_syntax' => ['syntax' => 'short'],
+    'indentation_type' => true,
+    'single_quote' => true,
+    'class_attributes_separation' => ['elements' => ['method' => 'one']],
+    'no_unused_imports' => true,
+    'binary_operator_spaces' => true,
+    'blank_line_before_statement' => [
+        'statements' => ['return', 'if', 'for', 'foreach', 'while', 'switch', 'break', 'continue', 'declare', 'try'],
+    ],
+    'strict_comparison' => true,
+    'line_ending' => true,
+];
+
+$finder = (new PhpCsFixer\Finder())
+    ->in(__DIR__ . '/src')
+    ->exclude('var');
+
+return (new PhpCsFixer\Config())
+    ->setParallelConfig(new PhpCsFixer\Runner\Parallel\ParallelConfig(maxProcesses: 4, filesPerProcess: 20))
+    ->setRules($rules)
+    ->setFinder($finder);

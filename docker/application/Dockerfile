@@ -7,7 +7,7 @@ RUN set -eux; \
 	apt-get install -y --no-install-recommends gettext-base apache2-utils zip unzip cron nginx supervisor memcached nano sendmail wget systemd curl git openssl \
     ghostscript poppler-utils imagemagick g++ libsodium-dev iputils-ping libpq-dev zlib1g-dev libmcrypt-dev libzip-dev libicu-dev  libxslt-dev libpng-dev libssh2-1-dev \
     libssl-dev libcurl4-openssl-dev libmagickwand-dev libmagickcore-dev libc-client-dev libmemcached-dev libfreetype6-dev libjpeg62-turbo-dev libxml2-dev libxft-dev libfontconfig1-dev  \
-    wait-for-it build-essential chrpath libkrb5-dev acl neofetch; \
+    wait-for-it build-essential chrpath libkrb5-dev acl neofetch nodejs npm; \
 	rm -rf /var/lib/apt/lists/*; \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer; \
     docker-php-ext-configure intl; \
