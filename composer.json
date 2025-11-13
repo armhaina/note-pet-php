@@ -103,6 +103,7 @@
         "doctrine/doctrine-fixtures-bundle": "*",
         "friendsofphp/php-cs-fixer": "^3.89",
         "phpstan/phpstan": "^2.1",
+        "symfony/debug-bundle": "7.3.*",
         "symfony/maker-bundle": "*",
         "symfony/stopwatch": "7.3.*",
         "symfony/web-profiler-bundle": "7.3.*"

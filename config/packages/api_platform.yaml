@@ -1,9 +1,27 @@
 api_platform:
-    title: Hello API Platform
     version: 1.0.0
+    title: Hello API Platform
+    description: 'Edu API description'
+
     defaults:
         stateless: true
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']
+
     graphql:
         enabled: true
+
+    show_webby: false
+
+    mapping:
+        paths: [ '%kernel.project_dir%/src/Entity' ]
+
+    patch_formats:
+        json: [ 'application/merge-patch+json' ]
+
+    swagger:
+        versions: [ 3 ]
+        api_keys:
+            Bearer:
+                name: AUTH-TOKEN
+                type: header
