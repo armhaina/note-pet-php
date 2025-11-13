@@ -2,13 +2,17 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Contract\EntityInterface;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+#[ApiResource]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`users`')]
 #[ORM\HasLifecycleCallbacks]
@@ -31,19 +35,18 @@ class User implements EntityInterface, UserInterface, PasswordAuthenticatedUserI
         name: 'email',
         type: Types::STRING,
         length: 255,
-        nullable: true,
+        unique: true,
         options: ['comment' => 'Электронная почта пользователя'],
     )]
-    private ?string $email = null;
+    private string $email;
 
     #[ORM\Column(
         name: 'password',
         type: Types::STRING,
         length: 255,
-        nullable: true,
         options: ['comment' => 'Пароль пользователя'],
     )]
-    private ?string $password = null;
+    private string $password;
 
     #[ORM\Column(
         name: 'created_at',
@@ -60,6 +63,19 @@ class User implements EntityInterface, UserInterface, PasswordAuthenticatedUserI
         options: ['comment' => 'Дата изменения'],
     )]
     private \DateTimeImmutable $updatedAt;
+
+    #[ORM\OneToMany(
+        targetEntity: Note::class,
+        mappedBy: 'user',
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
+    private Collection $notes;
+
+    public function __construct()
+    {
+        $this->notes = new ArrayCollection();
+    }
 
     public function __toString()
     {
@@ -89,7 +105,7 @@ class User implements EntityInterface, UserInterface, PasswordAuthenticatedUserI
     /**
      * @see PasswordAuthenticatedUserInterface
      */
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -101,7 +117,7 @@ class User implements EntityInterface, UserInterface, PasswordAuthenticatedUserI
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -157,5 +173,13 @@ class User implements EntityInterface, UserInterface, PasswordAuthenticatedUserI
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Note>
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
     }
 }

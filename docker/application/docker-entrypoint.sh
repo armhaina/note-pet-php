@@ -103,7 +103,7 @@ then
   # endregion
 
   # region Установить пакеты
-  composer require symfony/orm-pack symfony/serializer-pack symfony/monolog-bundle admin php-ds/php-ds guzzlehttp/guzzle
+  composer require symfony/orm-pack symfony/serializer-pack symfony/monolog-bundle admin php-ds/php-ds guzzlehttp/guzzle api
   composer require --dev maker-bundle orm-fixtures profiler
   # endregion
 

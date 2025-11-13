@@ -26,6 +26,9 @@ migrations-up: ## Накатить миграции
 migrations-down: ## Откатить миграции
 	docker compose exec -it application php bin/console doctrine:migrations:migrate 'prev' -n
 
+migrations-create-up: ## Создать файл миграций и накатить его
+	make cache-clear && make migrations-create && make migrations-up
+
 
 
 schedule-run:
