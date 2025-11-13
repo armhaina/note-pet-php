@@ -9,6 +9,8 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use App\Repository\UserRepository;
+use App\State\UserLoginProcessor;
+use App\State\UserPasswordHasherProcessor;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -18,8 +20,10 @@ use Symfony\Component\Serializer\Attribute\SerializedName;
 #[ApiResource(
     operations: [
         new GetCollection(),
+        new Post(uriTemplate: '/registration', processor: UserPasswordHasherProcessor::class),
         new Post(
             uriTemplate: '/login',
+            processor: UserLoginProcessor::class
         ),
         new Get(security: "is_granted('ROLE_USER')"),
         new Patch(
@@ -27,6 +31,7 @@ use Symfony\Component\Serializer\Attribute\SerializedName;
             denormalizationContext: ['groups' => ['user:passwordUpdate']],
             security: 'object == user',
             securityMessage: 'You are not same user',
+            processor: UserPasswordHasherProcessor::class,
         ),
         new Delete(security: "is_granted('ROLE_ADMIN') or object == user"),
     ],
