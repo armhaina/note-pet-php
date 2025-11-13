@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20251113121724 extends AbstractMigration
+final class Version20251113181550 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -27,12 +27,8 @@ final class Version20251113121724 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN "notes".description IS \'Текст\'');
         $this->addSql('COMMENT ON COLUMN "notes".created_at IS \'Дата создания(DC2Type:datetime_immutable)\'');
         $this->addSql('COMMENT ON COLUMN "notes".updated_at IS \'Дата изменения(DC2Type:datetime_immutable)\'');
-        $this->addSql('CREATE TABLE "users" (id SERIAL NOT NULL, roles JSON NOT NULL, email VARCHAR(255) DEFAULT NULL, password VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('COMMENT ON COLUMN "users".roles IS \'Роли пользователя\'');
-        $this->addSql('COMMENT ON COLUMN "users".email IS \'Электронная почта пользователя\'');
-        $this->addSql('COMMENT ON COLUMN "users".password IS \'Пароль пользователя\'');
-        $this->addSql('COMMENT ON COLUMN "users".created_at IS \'Дата создания(DC2Type:datetime_immutable)\'');
-        $this->addSql('COMMENT ON COLUMN "users".updated_at IS \'Дата изменения(DC2Type:datetime_immutable)\'');
+        $this->addSql('CREATE TABLE "users" (id SERIAL NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, token VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_1483A5E9E7927C74 ON "users" (email)');
         $this->addSql('ALTER TABLE "notes" ADD CONSTRAINT FK_11BA68CA76ED395 FOREIGN KEY (user_id) REFERENCES "users" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
