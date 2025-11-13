@@ -11,6 +11,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ApiResource]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -21,6 +22,7 @@ class User implements EntityInterface, UserInterface, PasswordAuthenticatedUserI
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: Types::INTEGER, nullable: false, options: ['unsigned' => true])]
+    #[Groups(groups: 'public')]
     private ?int $id = null;
 
     #[ORM\Column(
@@ -38,6 +40,7 @@ class User implements EntityInterface, UserInterface, PasswordAuthenticatedUserI
         unique: true,
         options: ['comment' => 'Электронная почта пользователя'],
     )]
+    #[Groups(groups: 'public')]
     private string $email;
 
     #[ORM\Column(

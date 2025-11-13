@@ -14,19 +14,23 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/v1/users')]
 class UserController extends AbstractController
 {
     public function __construct(
         private readonly UserService $userService,
-        private readonly UserPasswordHasherInterface $passwordHasher
+        private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly SerializerInterface $serializer
     ) {}
 
     /**
      * @throws EntityModelInvalidObjectTypeException
      * @throws EntityInvalidObjectTypeException
+     * @throws ExceptionInterface
      */
     #[Route(methods: [Request::METHOD_POST])]
     public function create(#[MapRequestPayload] UserRequestDTO $requestDTO): JsonResponse
@@ -42,6 +46,8 @@ class UserController extends AbstractController
 
         $entity = $this->userService->create(entity: $entity);
 
-        return new JsonResponse(['success' => true]);
+        $content = $this->serializer->serialize(data: $entity, format: 'json', context: ['groups' => ['public']]);
+
+        return new JsonResponse(data: $content, json: true);
     }
 }
