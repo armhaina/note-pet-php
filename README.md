@@ -4,3 +4,5 @@
 [![Symfony 7.3](https://img.shields.io/badge/symfony-7.3-%23000000.svg?style=for-the-badge&logo=symfony&logoColor=white)](https://symfony.com/releases/7.3)
 
 [//]: # ([![PostgreSQL]&#40;https://img.shields.io/badge/PostgreSQL-13.4-blue&#41;]&#40;https://www.postgresql.org/docs/release/15.3&#41;)
+
+[API-Platform](https://habr.com/ru/articles/707666/)
