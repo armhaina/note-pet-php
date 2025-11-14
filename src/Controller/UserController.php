@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\DTO\Request\UserRequestDTO;
 use App\Entity\User;
 use App\Exception\Entity\EntityInvalidObjectTypeException;
+use App\Exception\Entity\EntityNotFoundException;
 use App\Exception\EntityModel\EntityModelInvalidObjectTypeException;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -26,6 +29,25 @@ class UserController extends AbstractController
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly SerializerInterface $serializer
     ) {}
+
+    /**
+     * @throws EntityNotFoundException
+     * @throws ExceptionInterface
+     */
+    #[Route(
+        path: '/{id}',
+        requirements: ['id' => '\d+'],
+        methods: [Request::METHOD_GET]
+    )]
+    #[IsGranted(UserService::ROLE_USER)]
+    public function get(int $id, #[CurrentUser] ?User $user): JsonResponse
+    {
+        $entity = $this->userService->get(id: $id);
+
+        $content = $this->serializer->serialize(data: $entity, format: 'json', context: ['groups' => ['public']]);
+
+        return new JsonResponse(data: $content, json: true);
+    }
 
     /**
      * @throws EntityModelInvalidObjectTypeException
