@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\DTO\Request\UserRequestDTO;
 use App\Entity\User;
+use App\Enum\Group;
 use App\Exception\Entity\EntityInvalidObjectTypeException;
 use App\Exception\Entity\EntityNotFoundException;
 use App\Exception\EntityModel\EntityModelInvalidObjectTypeException;
@@ -18,7 +19,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/v1/users')]
@@ -32,7 +32,6 @@ class UserController extends AbstractController
 
     /**
      * @throws EntityNotFoundException
-     * @throws ExceptionInterface
      */
     #[Route(
         path: '/{id}',
@@ -40,19 +39,16 @@ class UserController extends AbstractController
         methods: [Request::METHOD_GET]
     )]
     #[IsGranted(UserService::ROLE_USER)]
-    public function get(int $id, #[CurrentUser] ?User $user): JsonResponse
+    public function get(int $id, #[CurrentUser] User $user): JsonResponse
     {
         $entity = $this->userService->get(id: $id);
 
-        $content = $this->serializer->serialize(data: $entity, format: 'json', context: ['groups' => ['public']]);
-
-        return new JsonResponse(data: $content, json: true);
+        return $this->json(data: $entity, context: ['groups' => [Group::PUBLIC->value]]);
     }
 
     /**
-     * @throws EntityModelInvalidObjectTypeException
      * @throws EntityInvalidObjectTypeException
-     * @throws ExceptionInterface
+     * @throws EntityModelInvalidObjectTypeException
      */
     #[Route(methods: [Request::METHOD_POST])]
     public function create(#[MapRequestPayload] UserRequestDTO $requestDTO): JsonResponse
@@ -68,8 +64,6 @@ class UserController extends AbstractController
 
         $entity = $this->userService->create(entity: $entity);
 
-        $content = $this->serializer->serialize(data: $entity, format: 'json', context: ['groups' => ['public']]);
-
-        return new JsonResponse(data: $content, json: true);
+        return $this->json(data: $entity, context: ['groups' => [Group::PUBLIC->value]]);
     }
 }
