@@ -19,7 +19,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api/v1/users')]
 class UserController extends AbstractController
@@ -27,7 +26,6 @@ class UserController extends AbstractController
     public function __construct(
         private readonly UserService $userService,
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly SerializerInterface $serializer
     ) {}
 
     /**
