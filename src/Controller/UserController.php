@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\DTO\Request\UserRequestDTO;
 use App\Entity\User;
 use App\Enum\Group;
+use App\Enum\Role;
 use App\Exception\Entity\EntityInvalidObjectTypeException;
 use App\Exception\Entity\EntityNotFoundException;
 use App\Exception\EntityModel\EntityModelInvalidObjectTypeException;
@@ -36,7 +37,7 @@ class UserController extends AbstractController
         requirements: ['id' => '\d+'],
         methods: [Request::METHOD_GET]
     )]
-    #[IsGranted(UserService::ROLE_USER)]
+    #[IsGranted(Role::ROLE_USER->value)]
     public function get(int $id, #[CurrentUser] User $user): JsonResponse
     {
         $entity = $this->userService->get(id: $id);
@@ -57,7 +58,7 @@ class UserController extends AbstractController
         $entity = (new User())
             ->setEmail(email: $requestDTO->getEmail())
             ->setPassword(password: $hashedPassword)
-            ->setRoles(roles: [UserService::ROLE_USER])
+            ->setRoles(roles: [Role::ROLE_USER->value])
         ;
 
         $entity = $this->userService->create(entity: $entity);
