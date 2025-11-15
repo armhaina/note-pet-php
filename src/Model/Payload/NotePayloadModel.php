@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\DTO\Request;
+namespace App\Model\Payload;
 
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class NoteRequestDto
+readonly class NotePayloadModel
 {
     public function __construct(
         #[Assert\NotBlank]

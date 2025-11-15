@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\DTO\Request\NoteRequestDto;
 use App\Entity\Note;
 use App\Entity\User;
 use App\Enum\Group;
@@ -14,6 +13,7 @@ use App\Exception\Entity\EntityNotFoundWhenDeleteException;
 use App\Exception\Entity\EntityNotFoundWhenUpdateException;
 use App\Exception\EntityModel\EntityModelInvalidObjectTypeException;
 use App\Exception\EntityQueryModel\EntityQueryModelInvalidObjectTypeException;
+use App\Model\Payload\NotePayloadModel;
 use App\Model\Query\NoteQueryModel;
 use App\Service\NoteService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -77,12 +77,12 @@ class NoteController extends AbstractController
      * @throws EntityModelInvalidObjectTypeException
      */
     #[Route(methods: [Request::METHOD_POST])]
-    public function create(#[MapRequestPayload] NoteRequestDto $requestDTO, #[CurrentUser] User $user): JsonResponse
+    public function create(#[MapRequestPayload] NotePayloadModel $model, #[CurrentUser] User $user): JsonResponse
     {
         $entity = (new Note())
-            ->setName(name: $requestDTO->getName())
-            ->setDescription(description: $requestDTO->getDescription())
-            ->setIsPrivate(isPrivate: $requestDTO->getIsPrivate())
+            ->setName(name: $model->getName())
+            ->setDescription(description: $model->getDescription())
+            ->setIsPrivate(isPrivate: $model->getIsPrivate())
             ->setUser(user: $user)
         ;
 
@@ -105,7 +105,7 @@ class NoteController extends AbstractController
     public function update(
         Note $note,
         #[MapRequestPayload]
-        NoteRequestDto $requestDTO,
+        NotePayloadModel $model,
         #[CurrentUser]
         User $user
     ): JsonResponse {
@@ -114,9 +114,9 @@ class NoteController extends AbstractController
         }
 
         $note
-            ->setName(name: $requestDTO->getName())
-            ->setDescription(description: $requestDTO->getDescription())
-            ->setIsPrivate(isPrivate: $requestDTO->getIsPrivate())
+            ->setName(name: $model->getName())
+            ->setDescription(description: $model->getDescription())
+            ->setIsPrivate(isPrivate: $model->getIsPrivate())
         ;
 
         $entity = $this->noteService->update(entity: $note);

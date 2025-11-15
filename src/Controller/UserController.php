@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\DTO\Request\UserRequestDto;
 use App\Entity\User;
 use App\Enum\Group;
 use App\Enum\Role;
 use App\Exception\Entity\EntityInvalidObjectTypeException;
 use App\Exception\Entity\EntityNotFoundException;
 use App\Exception\EntityModel\EntityModelInvalidObjectTypeException;
+use App\Model\Payload\UserPayloadModel;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -47,13 +47,13 @@ class UserController extends AbstractController
      * @throws EntityModelInvalidObjectTypeException
      */
     #[Route(methods: [Request::METHOD_POST])]
-    public function create(#[MapRequestPayload] UserRequestDto $requestDTO): JsonResponse
+    public function create(#[MapRequestPayload] UserPayloadModel $model): JsonResponse
     {
         $entity = new User();
-        $hashedPassword = $this->passwordHasher->hashPassword($entity, $requestDTO->getPassword());
+        $hashedPassword = $this->passwordHasher->hashPassword($entity, $model->getPassword());
 
         $entity = (new User())
-            ->setEmail(email: $requestDTO->getEmail())
+            ->setEmail(email: $model->getEmail())
             ->setPassword(password: $hashedPassword)
             ->setRoles(roles: [Role::ROLE_USER->value])
         ;
