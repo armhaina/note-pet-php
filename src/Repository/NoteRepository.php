@@ -94,6 +94,8 @@ class NoteRepository extends AbstractRepository implements RepositoryInterface
     {
         $query = $this->createQueryBuilder(self::QUERY_ALIAS);
 
+        $query->andWhere(self::QUERY_ALIAS.'.isPrivate = false');
+
         foreach ($queryModel->getOrderBy() as $column => $order) {
             $query->addOrderBy(sort: self::QUERY_ALIAS.'.'.$column, order: $order);
         }
@@ -117,7 +119,6 @@ class NoteRepository extends AbstractRepository implements RepositoryInterface
             $query
                 ->setParameter('userIds', $queryModel->getUserIds())
                 ->andWhere(self::QUERY_ALIAS.'.user IN (:userIds)')
-                ->andWhere(self::QUERY_ALIAS.'.isPrivate = false')
             ;
         }
 
