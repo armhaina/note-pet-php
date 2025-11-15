@@ -113,6 +113,21 @@ class NoteRepository extends AbstractRepository implements RepositoryInterface
             ;
         }
 
+        if ($queryModel->getUserIds()) {
+            $query
+                ->setParameter('userIds', $queryModel->getUserIds())
+                ->andWhere(self::QUERY_ALIAS.'.user IN (:userIds)')
+                ->andWhere(self::QUERY_ALIAS.'.isPrivate = false')
+            ;
+        }
+
+        if ($queryModel->getOwnUserId()) {
+            $query
+                ->setParameter('ownUserId', $queryModel->getOwnUserId())
+                ->orWhere(self::QUERY_ALIAS.'.user = :ownUserId')
+            ;
+        }
+
         return $query;
     }
 }

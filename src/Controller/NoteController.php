@@ -13,10 +13,13 @@ use App\Exception\Entity\EntityNotFoundException;
 use App\Exception\Entity\EntityNotFoundWhenDeleteException;
 use App\Exception\Entity\EntityNotFoundWhenUpdateException;
 use App\Exception\EntityModel\EntityModelInvalidObjectTypeException;
+use App\Exception\EntityQueryModel\EntityQueryModelInvalidObjectTypeException;
+use App\Model\Query\NoteQueryModel;
 use App\Service\NoteService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
@@ -30,17 +33,43 @@ class NoteController extends AbstractController
 
     /**
      * @throws EntityNotFoundException
+     * @throws \Exception
      */
     #[Route(
-        path: '/{id}',
-        requirements: ['id' => '\d+'],
+        path: '/{note}',
+        requirements: ['note' => '\d+'],
         methods: [Request::METHOD_GET]
     )]
-    public function get(int $id): JsonResponse
+    public function get(Note $note, #[CurrentUser] User $user): JsonResponse
     {
-        $entity = $this->noteService->get(id: $id);
+        if ($note->getIsPrivate() && $note->getUser() !== $user) {
+            throw new \Exception();
+        }
 
-        return $this->json(data: $entity, context: ['groups' => [Group::PUBLIC->value]]);
+        return $this->json(data: $note, context: ['groups' => [Group::PUBLIC->value]]);
+    }
+
+    /**
+     * @throws EntityQueryModelInvalidObjectTypeException
+     */
+    #[Route(
+        methods: [Request::METHOD_GET]
+    )]
+    public function list(#[MapQueryString] NoteQueryModel $model, #[CurrentUser] User $user): JsonResponse
+    {
+        if (in_array($user->getId(), $model->getUserIds())) {
+            $userIds = $model->getUserIds();
+            $keyUserId = array_search($user->getId(), $userIds);
+
+            unset($userIds[$keyUserId]);
+
+            $model->setUserIds(userIds: $userIds);
+            $model->setOwnUserId(ownUserId: $user->getId());
+        }
+
+        $list = $this->noteService->list(queryModel: $model);
+
+        return $this->json(data: $list, context: ['groups' => [Group::PUBLIC->value]]);
     }
 
     /**

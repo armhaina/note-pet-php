@@ -70,6 +70,7 @@ class Note implements EntityInterface
             'comment' => 'ID пользователя',
         ]
     )]
+    #[Groups(groups: Group::PUBLIC->value)]
     private User $user;
 
     #[ORM\Column(

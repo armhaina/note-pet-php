@@ -8,9 +8,11 @@ use App\Contract\EntityQueryModelInterface;
 
 class NoteQueryModel implements EntityQueryModelInterface
 {
-    private ?int $limit = null;
-    private ?int $offset = null;
+    private int $limit = 20;
+    private int $offset = 0;
+    private ?int $ownUserId = null;
     private ?array $ids = null;
+    private ?array $userIds = null;
     private array $orderBy = [];
 
     public function getLimit(): ?int
@@ -45,6 +47,30 @@ class NoteQueryModel implements EntityQueryModelInterface
     public function setIds(array $ids): self
     {
         $this->ids = $ids;
+
+        return $this;
+    }
+
+    public function getUserIds(): ?array
+    {
+        return $this->userIds;
+    }
+
+    public function setUserIds(array $userIds): self
+    {
+        $this->userIds = $userIds;
+
+        return $this;
+    }
+
+    public function getOwnUserId(): ?int
+    {
+        return $this->ownUserId;
+    }
+
+    public function setOwnUserId(int $ownUserId): self
+    {
+        $this->ownUserId = $ownUserId;
 
         return $this;
     }

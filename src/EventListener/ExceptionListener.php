@@ -25,7 +25,13 @@ class ExceptionListener
             ];
         }
 
-        $response = new JsonResponse(data: $data, status: $exception->getStatusCode() ?? 400);
+        $response = new JsonResponse(
+            data: $data,
+            status: method_exists(
+                object_or_class: $exception,
+                method: 'getStatusCode'
+            ) ? $exception->getStatusCode() : 400
+        );
 
         $event->setResponse(response: $response);
     }
