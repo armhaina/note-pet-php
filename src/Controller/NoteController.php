@@ -57,13 +57,9 @@ class NoteController extends AbstractController
     )]
     public function list(#[MapQueryString] NoteQueryModel $model): JsonResponse
     {
-        if (in_array($this->getUser()->getId(), $model->getUserIds() ?? [])) {
-            $userIds = $model->getUserIds();
-            $keyUserId = array_search($this->getUser()->getId(), $userIds);
-
-            unset($userIds[$keyUserId]);
-
-            $model->setUserIds(userIds: $userIds);
+        if (empty($model->getUserIds())
+            || in_array(needle: $this->getUser()->getId(), haystack: $model->getUserIds())
+        ) {
             $model->setOwnUserId(ownUserId: $this->getUser()->getId());
         }
 
