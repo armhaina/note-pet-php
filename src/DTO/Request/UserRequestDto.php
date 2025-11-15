@@ -6,7 +6,7 @@ namespace App\DTO\Request;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class UserRequestDTO
+readonly class UserRequestDto
 {
     public function __construct(
         #[Assert\NotBlank]

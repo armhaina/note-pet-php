@@ -7,7 +7,7 @@ namespace App\DTO\Request;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class NoteRequestDTO
+readonly class NoteRequestDto
 {
     public function __construct(
         #[Assert\NotBlank]

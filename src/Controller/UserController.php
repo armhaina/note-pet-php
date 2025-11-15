@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\DTO\Request\UserRequestDTO;
+use App\DTO\Request\UserRequestDto;
 use App\Entity\User;
 use App\Enum\Group;
 use App\Enum\Role;
@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route('/api/v1/users')]
 class UserController extends AbstractController
@@ -36,7 +35,7 @@ class UserController extends AbstractController
         requirements: ['id' => '\d+'],
         methods: [Request::METHOD_GET]
     )]
-    public function get(int $id, #[CurrentUser] User $user): JsonResponse
+    public function get(int $id): JsonResponse
     {
         $entity = $this->userService->get(id: $id);
 
@@ -48,7 +47,7 @@ class UserController extends AbstractController
      * @throws EntityModelInvalidObjectTypeException
      */
     #[Route(methods: [Request::METHOD_POST])]
-    public function create(#[MapRequestPayload] UserRequestDTO $requestDTO): JsonResponse
+    public function create(#[MapRequestPayload] UserRequestDto $requestDTO): JsonResponse
     {
         $entity = new User();
         $hashedPassword = $this->passwordHasher->hashPassword($entity, $requestDTO->getPassword());

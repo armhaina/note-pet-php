@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\DTO\Request\NoteRequestDTO;
+use App\DTO\Request\NoteRequestDto;
 use App\Entity\Note;
 use App\Entity\User;
 use App\Enum\Group;
@@ -34,7 +34,7 @@ class NoteController extends AbstractController
         requirements: ['id' => '\d+'],
         methods: [Request::METHOD_GET]
     )]
-    public function get(int $id, #[CurrentUser] User $user): JsonResponse
+    public function get(int $id): JsonResponse
     {
         $entity = $this->noteService->get(id: $id);
 
@@ -46,12 +46,37 @@ class NoteController extends AbstractController
      * @throws EntityModelInvalidObjectTypeException
      */
     #[Route(methods: [Request::METHOD_POST])]
-    public function create(#[MapRequestPayload] NoteRequestDTO $requestDTO): JsonResponse
+    public function create(#[MapRequestPayload] NoteRequestDto $requestDTO, #[CurrentUser] User $user): JsonResponse
     {
         $entity = (new Note())
             ->setName(name: $requestDTO->getName())
             ->setDescription(description: $requestDTO->getDescription())
             ->setIsPrivate(isPrivate: $requestDTO->getIsPrivate())
+            ->setUser(user: $user)
+        ;
+
+        $entity = $this->noteService->create(entity: $entity);
+
+        return $this->json(data: $entity, context: ['groups' => [Group::PUBLIC->value]]);
+    }
+
+    #[Route(
+        path: '/{note}',
+        requirements: ['note' => '\d+'],
+        methods: [Request::METHOD_PUT]
+    )]
+    public function update(
+        Note $note,
+        #[MapRequestPayload]
+        NoteRequestDto $requestDTO,
+        #[CurrentUser]
+        User $user
+    ): JsonResponse {
+        $entity = (new Note())
+            ->setName(name: $requestDTO->getName())
+            ->setDescription(description: $requestDTO->getDescription())
+            ->setIsPrivate(isPrivate: $requestDTO->getIsPrivate())
+            ->setUser(user: $user)
         ;
 
         $entity = $this->noteService->create(entity: $entity);
