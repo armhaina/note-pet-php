@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
+use App\DataFixtures\UserAuthorizedFixtures;
 use App\Tests\Support\FunctionalTester;
 use Codeception\Attribute\DataProvider;
 use Codeception\Example;
@@ -16,10 +17,32 @@ use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-final class NotesCest
+final class NotesCest extends AbstractHandleCest
 {
     public function _before(FunctionalTester $I): void
     {
+        $I->runSymfonyConsoleCommand(
+            command: 'doctrine:fixtures:load',
+            parameters: [
+                '--no-interaction' => '--no-interaction',
+                '--purge-with-truncate' => true,
+                '--group' => ['user-authorized'],
+                '--env' => 'test',
+            ]
+        );
+
+        $I->haveHttpHeader(name: 'Content-Type', value: 'application/json');
+        $I->sendPost(
+            url: '/api/login_check',
+            params: [
+                'username' => UserAuthorizedFixtures::EMAIL,
+                'password' => UserAuthorizedFixtures::PASSWORD
+            ]
+        );
+        $I->seeResponseCodeIs(code: 200);
+        $I->seeResponseIsJson();
+
+        $I->haveHttpHeader(name: 'Authorization', value: 'Bearer ' . json_decode($I->grabResponse(), true)['token']);
     }
 
     /**
@@ -29,14 +52,14 @@ final class NotesCest
     #[DataProvider('successProvider')]
     public function tryToTest(FunctionalTester $I, Example $example): void
     {
-        $I->haveHttpHeader(name: 'Content-Type', value: 'application/json');
-        $I->sendGet(url: '/api/v1/notes', params: $example['request']);
-
-        $data = json_decode($I->grabResponse(), true);
+        $I->sendGet(url: '/api/v1/notes');
 
         $I->seeResponseCodeIs(code: HttpCode::OK);
         $I->seeResponseIsJson();
-        $I->seeResponseContainsJson(json: $example['response']);
+//        $I->seeResponseContainsJson(json: $example['response']);
+
+        $data = json_decode($I->grabResponse(), true);
+        $I->assertEquals(expected: $example['response'], actual: $data);
     }
 
     protected function successProvider(): array

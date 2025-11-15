@@ -48,7 +48,7 @@ class UserController extends AbstractController
         $entity = new User();
         $hashedPassword = $this->passwordHasher->hashPassword($entity, $model->getPassword());
 
-        $entity = (new User())
+        $entity
             ->setEmail(email: $model->getEmail())
             ->setPassword(password: $hashedPassword)
             ->setRoles(roles: [Role::ROLE_USER->value])
