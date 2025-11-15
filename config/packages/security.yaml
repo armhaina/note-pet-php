@@ -21,15 +21,15 @@ security:
       pattern: ^/api
       stateless: true
       jwt: ~
-#    dev:
-#      pattern: ^/(_(profiler|wdt)|css|images|js)/
-#      security: false
-#    main:
-#      lazy: true
-#      provider: app_user_provider
-#      json_login:
-#        # api_login is a route we will create below
-#        check_path: api_login
+      #    dev:
+      #      pattern: ^/(_(profiler|wdt)|css|images|js)/
+      #      security: false
+      #    main:
+      #      lazy: true
+      #      provider: app_user_provider
+      #      json_login:
+      #        # api_login is a route we will create below
+      #        check_path: api_login
 
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#the-firewall
@@ -40,6 +40,7 @@ security:
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
   access_control:
+    - { path: ^/api/v1/users, roles: PUBLIC_ACCESS }
     - { path: ^/api/login, roles: PUBLIC_ACCESS }
     - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 
