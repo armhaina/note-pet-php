@@ -127,7 +127,7 @@ composer install
 # region Очистить/прогреть кэш и накатить миграции
 php bin/console cache:clear && php bin/console cache:warmup
 php bin/console doctrine:migrations:migrate -n
-bin/console lexik:jwt:generate-keypair --skip-if-exists
+php bin/console lexik:jwt:generate-keypair --skip-if-exists
 # endregion
 
 # region Настройка разрешений для приложений Symfony
