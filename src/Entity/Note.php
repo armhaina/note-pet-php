@@ -39,6 +39,17 @@ class Note implements EntityInterface
     )]
     private string $description;
 
+    #[ORM\Column(
+        name: 'is_private',
+        type: Types::BOOLEAN,
+        nullable: false,
+        options: [
+            'default' => true,
+            'comment' => 'Приватная заметка',
+        ],
+    )]
+    private bool $isPrivate;
+
     #[ORM\ManyToOne(
         targetEntity: User::class,
         cascade: ['persist'],
@@ -113,6 +124,18 @@ class Note implements EntityInterface
     public function setUser(User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getIsPrivate(): bool
+    {
+        return $this->isPrivate;
+    }
+
+    public function setIsPrivate(bool $isPrivate): self
+    {
+        $this->isPrivate = $isPrivate;
 
         return $this;
     }
