@@ -8,6 +8,8 @@ use App\Entity\User;
 use App\Enum\Group;
 use App\Enum\Role;
 use App\Exception\Entity\EntityInvalidObjectTypeException;
+use App\Exception\Entity\EntityNotFoundWhenDeleteException;
+use App\Exception\Entity\EntityNotFoundWhenUpdateException;
 use App\Exception\EntityModel\EntityModelInvalidObjectTypeException;
 use App\Model\Payload\UserPayloadModel;
 use App\Service\UserService;
@@ -55,5 +57,59 @@ class UserController extends AbstractController
         $entity = $this->userService->create(entity: $entity);
 
         return $this->json(data: $entity, context: ['groups' => [Group::PUBLIC->value]]);
+    }
+
+    /**
+     * @throws EntityModelInvalidObjectTypeException
+     * @throws EntityNotFoundWhenUpdateException
+     * @throws EntityInvalidObjectTypeException
+     * @throws \Exception
+     */
+    #[Route(
+        path: '/{user}',
+        requirements: ['user' => '\d+'],
+        methods: [Request::METHOD_PUT]
+    )]
+    public function update(
+        User $user,
+        #[MapRequestPayload]
+        UserPayloadModel $model
+    ): JsonResponse {
+        if ($user !== $this->getUser()) {
+            throw new \Exception();
+        }
+
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $model->getPassword());
+
+        $user
+            ->setEmail(email: $model->getEmail())
+            ->setPassword(password: $hashedPassword)
+        ;
+
+        $this->userService->update(entity: $user);
+
+        return $this->json(data: $user, context: ['groups' => [Group::PUBLIC->value]]);
+    }
+
+    /**
+     * @throws EntityModelInvalidObjectTypeException
+     * @throws EntityNotFoundWhenDeleteException
+     * @throws EntityInvalidObjectTypeException
+     * @throws \Exception
+     */
+    #[Route(
+        path: '/{user}',
+        requirements: ['user' => '\d+'],
+        methods: [Request::METHOD_DELETE]
+    )]
+    public function delete(User $user): JsonResponse
+    {
+        if ($user !== $this->getUser()) {
+            throw new \Exception();
+        }
+
+        $this->userService->delete(entity: $user);
+
+        return $this->json(data: ['success' => true, 'message' => 'Запись успешно удалена']);
     }
 }

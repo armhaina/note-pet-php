@@ -55,16 +55,16 @@ class NoteController extends AbstractController
     #[Route(
         methods: [Request::METHOD_GET]
     )]
-    public function list(#[MapQueryString] NoteQueryModel $model, #[CurrentUser] User $user): JsonResponse
+    public function list(#[MapQueryString] NoteQueryModel $model): JsonResponse
     {
-        if (in_array($user->getId(), $model->getUserIds())) {
+        if (in_array($this->getUser()->getId(), $model->getUserIds() ?? [])) {
             $userIds = $model->getUserIds();
-            $keyUserId = array_search($user->getId(), $userIds);
+            $keyUserId = array_search($this->getUser()->getId(), $userIds);
 
             unset($userIds[$keyUserId]);
 
             $model->setUserIds(userIds: $userIds);
-            $model->setOwnUserId(ownUserId: $user->getId());
+            $model->setOwnUserId(ownUserId: $this->getUser()->getId());
         }
 
         $list = $this->noteService->list(queryModel: $model);
@@ -77,13 +77,13 @@ class NoteController extends AbstractController
      * @throws EntityModelInvalidObjectTypeException
      */
     #[Route(methods: [Request::METHOD_POST])]
-    public function create(#[MapRequestPayload] NotePayloadModel $model, #[CurrentUser] User $user): JsonResponse
+    public function create(#[MapRequestPayload] NotePayloadModel $model): JsonResponse
     {
         $entity = (new Note())
             ->setName(name: $model->getName())
             ->setDescription(description: $model->getDescription())
             ->setIsPrivate(isPrivate: $model->getIsPrivate())
-            ->setUser(user: $user)
+            ->setUser(user: $this->getUser())
         ;
 
         $entity = $this->noteService->create(entity: $entity);
@@ -106,10 +106,8 @@ class NoteController extends AbstractController
         Note $note,
         #[MapRequestPayload]
         NotePayloadModel $model,
-        #[CurrentUser]
-        User $user
     ): JsonResponse {
-        if ($note->getUser() !== $user) {
+        if ($note->getUser() !== $this->getUser()) {
             throw new \Exception();
         }
 
@@ -135,17 +133,14 @@ class NoteController extends AbstractController
         requirements: ['note' => '\d+'],
         methods: [Request::METHOD_DELETE]
     )]
-    public function delete(
-        Note $note,
-        #[CurrentUser]
-        User $user
-    ): JsonResponse {
-        if ($note->getUser() !== $user) {
+    public function delete(Note $note): JsonResponse
+    {
+        if ($note->getUser() !== $this->getUser()) {
             throw new \Exception();
         }
 
         $this->noteService->delete(entity: $note);
 
-        return $this->json(data: ['success' => true, 'message' => 'Заметка успешно удалена']);
+        return $this->json(data: ['success' => true, 'message' => 'Запись успешно удалена']);
     }
 }
