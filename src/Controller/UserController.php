@@ -8,7 +8,6 @@ use App\Entity\User;
 use App\Enum\Group;
 use App\Enum\Role;
 use App\Exception\Entity\EntityInvalidObjectTypeException;
-use App\Exception\Entity\EntityNotFoundException;
 use App\Exception\EntityModel\EntityModelInvalidObjectTypeException;
 use App\Model\Payload\UserPayloadModel;
 use App\Service\UserService;
@@ -27,19 +26,14 @@ class UserController extends AbstractController
         private readonly UserPasswordHasherInterface $passwordHasher,
     ) {}
 
-    /**
-     * @throws EntityNotFoundException
-     */
     #[Route(
-        path: '/{id}',
-        requirements: ['id' => '\d+'],
+        path: '/{user}',
+        requirements: ['user' => '\d+'],
         methods: [Request::METHOD_GET]
     )]
-    public function get(int $id): JsonResponse
+    public function get(User $user): JsonResponse
     {
-        $entity = $this->userService->get(id: $id);
-
-        return $this->json(data: $entity, context: ['groups' => [Group::PUBLIC->value]]);
+        return $this->json(data: $user, context: ['groups' => [Group::PUBLIC->value]]);
     }
 
     /**
