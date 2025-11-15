@@ -14,6 +14,7 @@ class NoteQueryModel implements EntityQueryModelInterface
     private ?array $ids = null;
     private ?array $userIds = null;
     private array $orderBy = [];
+    private ?\DateTimeImmutable $updatedAtLess = null;
 
     public function getLimit(): int
     {
@@ -83,6 +84,18 @@ class NoteQueryModel implements EntityQueryModelInterface
     public function setOrderBy(array $orderBy): self
     {
         $this->orderBy = $orderBy;
+
+        return $this;
+    }
+
+    public function getUpdatedAtLess(): ?\DateTimeImmutable
+    {
+        return $this->updatedAtLess;
+    }
+
+    public function setUpdatedAtLess(\DateTimeImmutable $updatedAtLess): self
+    {
+        $this->updatedAtLess = $updatedAtLess;
 
         return $this;
     }

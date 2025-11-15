@@ -129,6 +129,13 @@ class NoteRepository extends AbstractRepository implements RepositoryInterface
             ;
         }
 
+        if ($queryModel->getUpdatedAtLess()) {
+            $query
+                ->setParameter('updatedAtLess', $queryModel->getUpdatedAtLess())
+                ->andWhere(self::QUERY_ALIAS.'.updatedAt < :updatedAtLess')
+            ;
+        }
+
         return $query;
     }
 }
