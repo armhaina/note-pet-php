@@ -8,14 +8,14 @@ use App\Contract\EntityQueryModelInterface;
 
 class UserQueryModel implements EntityQueryModelInterface
 {
-    private ?int $limit = null;
-    private ?int $offset = null;
+    private int $limit = 20;
+    private int $offset = 0;
     private ?array $ids = null;
     private ?array $excludeIds = null;
     private ?array $roles = null;
     private array $orderBy = [];
 
-    public function getLimit(): ?int
+    public function getLimit(): int
     {
         return $this->limit;
     }
@@ -27,7 +27,7 @@ class UserQueryModel implements EntityQueryModelInterface
         return $this;
     }
 
-    public function getOffset(): ?int
+    public function getOffset(): int
     {
         return $this->offset;
     }

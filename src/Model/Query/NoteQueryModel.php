@@ -15,7 +15,7 @@ class NoteQueryModel implements EntityQueryModelInterface
     private ?array $userIds = null;
     private array $orderBy = [];
 
-    public function getLimit(): ?int
+    public function getLimit(): int
     {
         return $this->limit;
     }
@@ -27,7 +27,7 @@ class NoteQueryModel implements EntityQueryModelInterface
         return $this;
     }
 
-    public function getOffset(): ?int
+    public function getOffset(): int
     {
         return $this->offset;
     }
