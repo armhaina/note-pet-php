@@ -43,41 +43,7 @@ final class NotesCest
     {
         return [
             [
-                'request' => [
-                    'update_id' => 581766056,
-                    'message' =>
-                        [
-                            'message_id' => 2335,
-                            'from' =>
-                                [
-                                    'id' => 528480542,
-                                    'is_bot' => false,
-                                    'first_name' => 'Георгий',
-                                    'last_name' => 'Либиков',
-                                    'username' => 'armhaina',
-                                    'language_code' => 'ru',
-                                    'is_premium' => true,
-                                ],
-                            'chat' =>
-                                [
-                                    'id' => 528480542,
-                                    'first_name' => 'Георгий',
-                                    'last_name' => 'Либиков',
-                                    'username' => 'armhaina',
-                                    'type' => 'private',
-                                ],
-                            'date' => 1755081672,
-                            'text' => '/start',
-                            'entities' =>
-                                [
-                                    [
-                                        'offset' => 0,
-                                        'length' => 6,
-                                        'type' => 'bot_command',
-                                    ],
-                                ],
-                        ],
-                ],
+                'request' => [],
                 'response' => [
                     'ok' => true,
                     'result' => [

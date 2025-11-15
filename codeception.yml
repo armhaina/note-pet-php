@@ -12,5 +12,5 @@ extensions:
         - Codeception\Extension\RunFailed
 params:
     - .env
-    - .env.test # Добавить для использования тестового окружения (при работе с модулем symfony НЕ работает)
-bootstrap: bootstrap.php # Загрузить bootstrap перед тестами
+    - .env.test
+bootstrap: bootstrap.php
