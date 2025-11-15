@@ -121,7 +121,7 @@ composer install
 # endregion
 
 # region Сгенерировать карту класса
-composer dump-autoload --classmap-authoritative
+# composer dump-autoload --classmap-authoritative
 # endregion
 
 # region Очистить/прогреть кэш и накатить миграции
