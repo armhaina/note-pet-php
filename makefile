@@ -42,6 +42,19 @@ schedule-debug:
 
 
 
+test-run: ## Запустить тесты
+	docker compose exec -it application php vendor/bin/codecept run
+
+test-run-functional-test: ## Запустить определенный функциональный тест
+	docker compose exec -it application php vendor/bin/codecept run tests/Functional/ServersCest:tryToTest
+
+test-init: ## Инициализация тестовой базы
+	docker compose exec -it application php bin/console doctrine:database:drop --if-exists --force --env=test || true
+	docker compose exec -it application php bin/console doctrine:database:create --env=test
+	docker compose exec -it application php bin/console doctrine:migrations:migrate -n --env=test
+
+
+
 cache-clear:
 	make cache-clear-insert
 	docker compose exec -it application chmod -R 777 var
