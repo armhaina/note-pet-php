@@ -8,7 +8,6 @@ use App\DTO\Request\NoteRequestDTO;
 use App\Entity\Note;
 use App\Entity\User;
 use App\Enum\Group;
-use App\Enum\Role;
 use App\Exception\Entity\EntityInvalidObjectTypeException;
 use App\Exception\Entity\EntityNotFoundException;
 use App\Exception\EntityModel\EntityModelInvalidObjectTypeException;
@@ -19,7 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/v1/notes')]
 class NoteController extends AbstractController
@@ -36,7 +34,6 @@ class NoteController extends AbstractController
         requirements: ['id' => '\d+'],
         methods: [Request::METHOD_GET]
     )]
-    #[IsGranted(Role::ROLE_USER->value)]
     public function get(int $id, #[CurrentUser] User $user): JsonResponse
     {
         $entity = $this->noteService->get(id: $id);
@@ -49,7 +46,6 @@ class NoteController extends AbstractController
      * @throws EntityModelInvalidObjectTypeException
      */
     #[Route(methods: [Request::METHOD_POST])]
-    #[IsGranted(Role::ROLE_USER->value)]
     public function create(#[MapRequestPayload] NoteRequestDTO $requestDTO): JsonResponse
     {
         $entity = (new Note())

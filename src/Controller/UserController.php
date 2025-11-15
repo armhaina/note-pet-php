@@ -19,7 +19,6 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/api/v1/users')]
 class UserController extends AbstractController
@@ -37,7 +36,6 @@ class UserController extends AbstractController
         requirements: ['id' => '\d+'],
         methods: [Request::METHOD_GET]
     )]
-    #[IsGranted(Role::ROLE_USER->value)]
     public function get(int $id, #[CurrentUser] User $user): JsonResponse
     {
         $entity = $this->userService->get(id: $id);
