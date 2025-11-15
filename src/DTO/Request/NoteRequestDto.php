@@ -11,11 +11,12 @@ readonly class NoteRequestDto
 {
     public function __construct(
         #[Assert\NotBlank]
+        #[Assert\Type(type: Types::STRING)]
         private string $name,
         #[Assert\NotBlank]
+        #[Assert\Type(type: Types::STRING)]
         private string $description,
-        #[Assert\NotBlank]
-        #[Assert\Type(type: Types::BOOLEAN, message: "Значение '{{ value }}' должно быть булевым.")]
+        #[Assert\Type(type: Types::BOOLEAN)]
         private bool $isPrivate,
     ) {}
 

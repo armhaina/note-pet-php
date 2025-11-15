@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Enum\Group;
 use App\Exception\Entity\EntityInvalidObjectTypeException;
 use App\Exception\Entity\EntityNotFoundException;
+use App\Exception\Entity\EntityNotFoundWhenUpdateException;
 use App\Exception\EntityModel\EntityModelInvalidObjectTypeException;
 use App\Service\NoteService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -60,6 +61,12 @@ class NoteController extends AbstractController
         return $this->json(data: $entity, context: ['groups' => [Group::PUBLIC->value]]);
     }
 
+    /**
+     * @throws EntityModelInvalidObjectTypeException
+     * @throws EntityNotFoundWhenUpdateException
+     * @throws EntityInvalidObjectTypeException
+     * @throws \Exception
+     */
     #[Route(
         path: '/{note}',
         requirements: ['note' => '\d+'],
@@ -72,14 +79,17 @@ class NoteController extends AbstractController
         #[CurrentUser]
         User $user
     ): JsonResponse {
-        $entity = (new Note())
+        if ($note->getUser() !== $user) {
+            throw new \Exception();
+        }
+
+        $note
             ->setName(name: $requestDTO->getName())
             ->setDescription(description: $requestDTO->getDescription())
             ->setIsPrivate(isPrivate: $requestDTO->getIsPrivate())
-            ->setUser(user: $user)
         ;
 
-        $entity = $this->noteService->create(entity: $entity);
+        $entity = $this->noteService->update(entity: $note);
 
         return $this->json(data: $entity, context: ['groups' => [Group::PUBLIC->value]]);
     }

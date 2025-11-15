@@ -19,7 +19,13 @@ class ExceptionListener
             'code' => $exception->getCode(),
         ];
 
-        $response = new JsonResponse(data: $data, status: $exception->getCode());
+        if (!empty($exception->getPrevious())) {
+            $data['previous'] = [
+                'message' => $exception->getPrevious()->getMessage(),
+            ];
+        }
+
+        $response = new JsonResponse(data: $data, status: $exception->getStatusCode() ?? 400);
 
         $event->setResponse(response: $response);
     }
