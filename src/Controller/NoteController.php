@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Enum\Group;
 use App\Exception\Entity\EntityInvalidObjectTypeException;
 use App\Exception\Entity\EntityNotFoundException;
+use App\Exception\Entity\EntityNotFoundWhenDeleteException;
 use App\Exception\Entity\EntityNotFoundWhenUpdateException;
 use App\Exception\EntityModel\EntityModelInvalidObjectTypeException;
 use App\Service\NoteService;
@@ -92,5 +93,30 @@ class NoteController extends AbstractController
         $entity = $this->noteService->update(entity: $note);
 
         return $this->json(data: $entity, context: ['groups' => [Group::PUBLIC->value]]);
+    }
+
+    /**
+     * @throws EntityNotFoundWhenDeleteException
+     * @throws EntityModelInvalidObjectTypeException
+     * @throws EntityInvalidObjectTypeException
+     * @throws \Exception
+     */
+    #[Route(
+        path: '/{note}',
+        requirements: ['note' => '\d+'],
+        methods: [Request::METHOD_DELETE]
+    )]
+    public function delete(
+        Note $note,
+        #[CurrentUser]
+        User $user
+    ): JsonResponse {
+        if ($note->getUser() !== $user) {
+            throw new \Exception();
+        }
+
+        $this->noteService->delete(entity: $note);
+
+        return $this->json(data: ['success' => true, 'message' => 'Заметка успешно удалена']);
     }
 }
