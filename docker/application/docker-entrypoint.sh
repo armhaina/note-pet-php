@@ -174,6 +174,7 @@ fi
 
 # region Установить lefthook
 npm install lefthook --save-dev
+chmod -R 777 $PROJECT_PATH/node_modules/.bin/lefthook
 node_modules/.bin/lefthook install
 # endregion
 
