@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Functional;
+namespace App\Tests\Functional\Note;
 
-use App\DataFixtures\NoteListFixtures;
+use App\DataFixtures\Note\NoteListFixtures;
+use App\Tests\Functional\AbstractCest;
 use App\Tests\Support\FunctionalTester;
 use Codeception\Attribute\DataProvider;
 use Codeception\Example;
 use Codeception\Util\HttpCode;
 
-final class NotesCest extends AbstractCest
+final class NoteListCest extends AbstractCest
 {
     #[DataProvider('successProvider')]
     public function tryToTest(FunctionalTester $I, Example $example): void

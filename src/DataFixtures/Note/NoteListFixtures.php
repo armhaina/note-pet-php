@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataFixtures;
+namespace App\DataFixtures\Note;
 
 use App\Entity\Note;
 use App\Entity\User;
