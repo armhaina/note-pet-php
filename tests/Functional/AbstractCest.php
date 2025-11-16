@@ -14,12 +14,28 @@ abstract class AbstractCest
         $I->haveHttpHeader(name: 'Content-Type', value: 'application/json');
     }
 
-    protected function loadFixtures(FunctionalTester $I, array $groups, bool $isAuthorized = true): void
+    protected function authorized(FunctionalTester $I): void
     {
-        if ($isAuthorized) {
-            $groups = array_merge($groups, UserAuthorizedFixtures::GROUPS);
-        }
+        $this->commandDoctrineFixturesLoad(I: $I, groups: UserAuthorizedFixtures::GROUPS);
 
+        $I->sendPost(
+            url: '/api/login_check',
+            params: [
+                'username' => UserAuthorizedFixtures::EMAIL,
+                'password' => UserAuthorizedFixtures::PASSWORD,
+            ]
+        );
+        $I->seeResponseCodeIs(code: 200);
+        $I->seeResponseIsJson();
+
+        $I->haveHttpHeader(
+            name: 'Authorization',
+            value: 'Bearer '.json_decode($I->grabResponse(), true)['token']
+        );
+    }
+
+    protected function commandDoctrineFixturesLoad(FunctionalTester $I, array $groups): void
+    {
         $I->runSymfonyConsoleCommand(
             command: 'doctrine:fixtures:load',
             parameters: [
@@ -27,25 +43,9 @@ abstract class AbstractCest
                 '--purge-with-truncate' => true,
                 '--group' => $groups,
                 '--env' => 'test',
+                '--append' => null,
             ]
         );
-
-        if ($isAuthorized) {
-            $I->sendPost(
-                url: '/api/login_check',
-                params: [
-                    'username' => UserAuthorizedFixtures::EMAIL,
-                    'password' => UserAuthorizedFixtures::PASSWORD,
-                ]
-            );
-            $I->seeResponseCodeIs(code: 200);
-            $I->seeResponseIsJson();
-
-            $I->haveHttpHeader(
-                name: 'Authorization',
-                value: 'Bearer '.json_decode($I->grabResponse(), true)['token']
-            );
-        }
     }
 
     protected static function except(array &$data, array $excludeKeys): array
