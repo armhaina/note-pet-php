@@ -9,13 +9,16 @@ use App\Tests\Support\FunctionalTester;
 
 abstract class AbstractCest
 {
+    public function _before(FunctionalTester $I): void
+    {
+        $I->haveHttpHeader(name: 'Content-Type', value: 'application/json');
+    }
+
     protected function loadFixtures(FunctionalTester $I, array $groups, bool $isAuthorized = true): void
     {
         if ($isAuthorized) {
-            $groups = array_merge($groups, ['user-authorized']);
+            $groups = array_merge($groups, UserAuthorizedFixtures::GROUPS);
         }
-
-        $I->haveHttpHeader(name: 'Content-Type', value: 'application/json');
 
         $I->runSymfonyConsoleCommand(
             command: 'doctrine:fixtures:load',
@@ -49,7 +52,7 @@ abstract class AbstractCest
     {
         foreach ($data as &$value) {
             if (is_array($value)) {
-                self::except($value, $excludeKeys);
+                self::except(data: $value, excludeKeys: $excludeKeys);
             }
         }
 

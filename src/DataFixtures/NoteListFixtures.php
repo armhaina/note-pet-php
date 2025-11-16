@@ -11,6 +11,8 @@ use Doctrine\Persistence\ObjectManager;
 
 class NoteListFixtures extends Fixture implements FixtureGroupInterface
 {
+    public const GROUPS = ['note-list'];
+
     public function load(ObjectManager $manager): void
     {
         for ($i = 0; $i < 2; ++$i) {
@@ -35,6 +37,6 @@ class NoteListFixtures extends Fixture implements FixtureGroupInterface
 
     public static function getGroups(): array
     {
-        return ['note-list'];
+        return self::GROUPS;
     }
 }

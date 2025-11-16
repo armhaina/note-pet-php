@@ -13,6 +13,7 @@ class UserAuthorizedFixtures extends Fixture implements FixtureGroupInterface
 {
     public const EMAIL = 'userAuthorized@mail.ru';
     public const PASSWORD = 'userAuthorizedPassword';
+    public const GROUPS = ['user-authorized'];
 
     public function __construct(
         private readonly UserPasswordHasherInterface $passwordHasher,
@@ -35,6 +36,6 @@ class UserAuthorizedFixtures extends Fixture implements FixtureGroupInterface
 
     public static function getGroups(): array
     {
-        return ['user-authorized'];
+        return self::GROUPS;
     }
 }

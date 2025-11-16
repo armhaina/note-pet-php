@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Functional;
 
+use App\DataFixtures\NoteListFixtures;
 use App\Tests\Support\FunctionalTester;
 use Codeception\Attribute\DataProvider;
 use Codeception\Example;
@@ -11,8 +12,6 @@ use Codeception\Util\HttpCode;
 
 final class NotesCest extends AbstractCest
 {
-    public function _before(FunctionalTester $I): void {}
-
     #[DataProvider('successProvider')]
     public function tryToTest(FunctionalTester $I, Example $example): void
     {
@@ -32,7 +31,7 @@ final class NotesCest extends AbstractCest
     {
         return [
             [
-                'groups' => ['note-list'],
+                'groups' => NoteListFixtures::GROUPS,
                 'response' => [
                     [
                         'name' => 'Заметка_0',
