@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Contract\EntityInterface;
+use App\Enum\Group;
 use App\Repository\NoteRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ApiResource]
 #[ORM\Entity(repositoryClass: NoteRepository::class)]
@@ -17,6 +19,7 @@ class Note implements EntityInterface
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: Types::INTEGER, nullable: false, options: ['unsigned' => true])]
+    #[Groups(groups: Group::PUBLIC->value)]
     private ?int $id = null;
 
     #[ORM\Column(
@@ -27,6 +30,7 @@ class Note implements EntityInterface
             'comment' => 'Наименование',
         ],
     )]
+    #[Groups(groups: Group::PUBLIC->value)]
     private string $name;
 
     #[ORM\Column(
@@ -37,7 +41,20 @@ class Note implements EntityInterface
             'comment' => 'Текст',
         ],
     )]
+    #[Groups(groups: Group::PUBLIC->value)]
     private string $description;
+
+    #[ORM\Column(
+        name: 'is_private',
+        type: Types::BOOLEAN,
+        nullable: false,
+        options: [
+            'default' => true,
+            'comment' => 'Приватная заметка',
+        ],
+    )]
+    #[Groups(groups: Group::PUBLIC->value)]
+    private bool $isPrivate;
 
     #[ORM\ManyToOne(
         targetEntity: User::class,
@@ -53,6 +70,7 @@ class Note implements EntityInterface
             'comment' => 'ID пользователя',
         ]
     )]
+    #[Groups(groups: Group::PUBLIC->value)]
     private User $user;
 
     #[ORM\Column(
@@ -113,6 +131,18 @@ class Note implements EntityInterface
     public function setUser(User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getIsPrivate(): bool
+    {
+        return $this->isPrivate;
+    }
+
+    public function setIsPrivate(bool $isPrivate): self
+    {
+        $this->isPrivate = $isPrivate;
 
         return $this;
     }

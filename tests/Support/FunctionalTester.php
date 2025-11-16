@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Support;
+namespace App\Tests\Support;
+
+use Codeception\Actor;
 
 /**
- * Inherited Methods
+ * Inherited Methods.
+ *
  * @method void wantTo($text)
  * @method void wantToTest($text)
  * @method void execute($callable)
@@ -18,12 +21,10 @@ namespace Tests\Support;
  * @method void pause($vars = [])
  *
  * @SuppressWarnings(PHPMD)
-*/
-class FunctionalTester extends \Codeception\Actor
+ */
+class FunctionalTester extends Actor
 {
     use _generated\FunctionalTesterActions;
 
-    /**
-     * Define custom actions here
-     */
+    // Define custom actions here
 }

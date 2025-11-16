@@ -8,5 +8,15 @@
 actor: FunctionalTester
 modules:
     enabled:
-        # add a framework module here
+        - Asserts # Обертка PHPUnit
+        - Symfony:
+              app_path: 'src'
+              environment: 'test'
+        - REST:
+              depends: Symfony
+              part: Json # Запросы возвращают только Json
+        - Doctrine:
+              depends: Symfony
+              cleanup: true # Запрос находится в транзакции и записи удаляются после выполнения тестов
+        - Cli:
 step_decorators: ~

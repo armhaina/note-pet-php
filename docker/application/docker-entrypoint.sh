@@ -103,8 +103,27 @@ then
   # endregion
 
   # region Установить пакеты
-  composer require symfony/orm-pack symfony/serializer-pack symfony/monolog-bundle admin php-ds/php-ds guzzlehttp/guzzle api api-platform/graphql
-  composer require --dev maker-bundle orm-fixtures profiler
+  composer require \
+  symfony/orm-pack \
+  symfony/serializer-pack \
+  symfony/monolog-bundle \
+  admin \
+  php-ds/php-ds \
+  guzzlehttp/guzzle \
+  api \
+  api-platform/graphql \
+  lexik/jwt-authentication-bundle
+
+  composer require --dev \
+  maker-bundle \
+  orm-fixtures profiler \
+  codeception/module-symfony \
+  codeception/module-rest \
+  codeception/module-doctrine \
+  codeception/module-phpbrowser \
+  codeception/module-cli \
+  codeception/module-asserts \
+  codeception/c3
   # endregion
 
   # region Установить полные права на все папки и файлы
@@ -120,13 +139,10 @@ fi
 composer install
 # endregion
 
-# region Сгенерировать карту класса
-composer dump-autoload --classmap-authoritative
-# endregion
-
-# region Очистить/прогреть кэш и накатить миграции
+# region Очистить/прогреть кэш, накатить миграции, создать ключи JWT
 php bin/console cache:clear && php bin/console cache:warmup
 php bin/console doctrine:migrations:migrate -n
+php bin/console lexik:jwt:generate-keypair --skip-if-exists
 # endregion
 
 # region Настройка разрешений для приложений Symfony

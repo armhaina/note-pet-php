@@ -20,9 +20,6 @@ use Ds\Sequence;
 
 readonly class UserService extends AbstractService implements ServiceInterface
 {
-    // TODO: проверить возможность вынести роли пользователей в конфиг
-    public const ROLE_USER = 'ROLE_USER';
-
     public function __construct(
         private UserRepository $userRepository,
     ) {

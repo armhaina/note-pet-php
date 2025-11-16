@@ -8,12 +8,15 @@ use App\Contract\EntityQueryModelInterface;
 
 class NoteQueryModel implements EntityQueryModelInterface
 {
-    private ?int $limit = null;
-    private ?int $offset = null;
+    private int $limit = 20;
+    private int $offset = 0;
+    private ?int $ownUserId = null;
     private ?array $ids = null;
+    private ?array $userIds = null;
     private array $orderBy = [];
+    private ?\DateTimeImmutable $updatedAtLess = null;
 
-    public function getLimit(): ?int
+    public function getLimit(): int
     {
         return $this->limit;
     }
@@ -25,7 +28,7 @@ class NoteQueryModel implements EntityQueryModelInterface
         return $this;
     }
 
-    public function getOffset(): ?int
+    public function getOffset(): int
     {
         return $this->offset;
     }
@@ -49,6 +52,30 @@ class NoteQueryModel implements EntityQueryModelInterface
         return $this;
     }
 
+    public function getUserIds(): ?array
+    {
+        return $this->userIds;
+    }
+
+    public function setUserIds(array $userIds): self
+    {
+        $this->userIds = $userIds;
+
+        return $this;
+    }
+
+    public function getOwnUserId(): ?int
+    {
+        return $this->ownUserId;
+    }
+
+    public function setOwnUserId(int $ownUserId): self
+    {
+        $this->ownUserId = $ownUserId;
+
+        return $this;
+    }
+
     public function getOrderBy(): array
     {
         return $this->orderBy;
@@ -57,6 +84,18 @@ class NoteQueryModel implements EntityQueryModelInterface
     public function setOrderBy(array $orderBy): self
     {
         $this->orderBy = $orderBy;
+
+        return $this;
+    }
+
+    public function getUpdatedAtLess(): ?\DateTimeImmutable
+    {
+        return $this->updatedAtLess;
+    }
+
+    public function setUpdatedAtLess(\DateTimeImmutable $updatedAtLess): self
+    {
+        $this->updatedAtLess = $updatedAtLess;
 
         return $this;
     }

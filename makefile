@@ -27,27 +27,32 @@ migrations-down: ## Откатить миграции
 	docker compose exec -it application php bin/console doctrine:migrations:migrate 'prev' -n
 
 migrations-create-up: ## Создать файл миграций и накатить его
-	make cache-clear && make migrations-create && make migrations-up
+	make migrations-create && make migrations-up
 
 
 
-schedule-run:
+schedule-run: ## Запустить процесс scheduler
 	docker compose exec -it application php bin/console messenger:consume -vv
 
-schedule-stop:
+schedule-stop: ## Остановить процесс scheduler
 	docker compose exec -it application php bin/console messenger:stop-workers
 
-schedule-debug:
+schedule-debug: ## Просмотреть все команды scheduler
 	docker compose exec -it application php bin/console debug:schedule
 
 
 
-cache-clear:
-	make cache-clear-insert
-	docker compose exec -it application chmod -R 777 var
+test-run: ## Запустить тесты
+	docker compose exec -it application php vendor/bin/codecept run
 
-cache-clear-insert:
-	docker compose exec -it application rm -rf var
+test-init: ## Инициализация тестовой базы
+	docker compose exec -it application php bin/console doctrine:database:drop --if-exists --force --env=test || true
+	docker compose exec -it application php bin/console doctrine:database:create --env=test
+	docker compose exec -it application php bin/console doctrine:migrations:migrate -n --env=test
+
+
+
+cache-clear:
 	docker compose exec -it application php bin/console cache:clear
     docker compose exec -it application php bin/console cache:warmup
 

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Contract\EntityInterface;
+use App\Enum\Group;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -22,7 +23,7 @@ class User implements EntityInterface, UserInterface, PasswordAuthenticatedUserI
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\Column(type: Types::INTEGER, nullable: false, options: ['unsigned' => true])]
-    #[Groups(groups: 'public')]
+    #[Groups(groups: Group::PUBLIC->value)]
     private ?int $id = null;
 
     #[ORM\Column(
@@ -40,7 +41,7 @@ class User implements EntityInterface, UserInterface, PasswordAuthenticatedUserI
         unique: true,
         options: ['comment' => 'Электронная почта пользователя'],
     )]
-    #[Groups(groups: 'public')]
+    #[Groups(groups: Group::PUBLIC->value)]
     private string $email;
 
     #[ORM\Column(
