@@ -139,11 +139,7 @@ fi
 composer install
 # endregion
 
-# region Сгенерировать карту класса
-# composer dump-autoload --classmap-authoritative
-# endregion
-
-# region Очистить/прогреть кэш и накатить миграции
+# region Очистить/прогреть кэш, накатить миграции, создать ключи JWT
 php bin/console cache:clear && php bin/console cache:warmup
 php bin/console doctrine:migrations:migrate -n
 php bin/console lexik:jwt:generate-keypair --skip-if-exists
