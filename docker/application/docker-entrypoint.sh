@@ -88,53 +88,6 @@ unlink /etc/nginx/sites-enabled/default
 git config --global --add safe.directory $PROJECT_PATH
 # endregion
 
-if [ ! -d $PROJECT_PATH/public/ ]
-then
-  # region Установить Symfony
-  composer create-project symfony/skeleton app
-  # endregion
-
-  # region Перенести файлы Symfony в корневую категорию
-  mv app/* . && rm -rf app
-  # endregion
-
-  # region Отменить добавление рецептов Symfony
-  composer config --json extra.symfony.docker 'false'
-  # endregion
-
-  # region Установить пакеты
-  composer require \
-  symfony/orm-pack \
-  symfony/serializer-pack \
-  symfony/monolog-bundle \
-  admin \
-  php-ds/php-ds \
-  guzzlehttp/guzzle \
-  api \
-  api-platform/graphql \
-  lexik/jwt-authentication-bundle
-
-  composer require --dev \
-  maker-bundle \
-  orm-fixtures profiler \
-  codeception/module-symfony \
-  codeception/module-rest \
-  codeception/module-doctrine \
-  codeception/module-phpbrowser \
-  codeception/module-cli \
-  codeception/module-asserts \
-  codeception/c3
-  # endregion
-
-  # region Установить полные права на все папки и файлы
-  cd $PROJECT_PATH && chmod -R 777 .
-  # endregion
-
-  # region Создать пустой файл миграции (инициализация ДБ)
-  php bin/console make:migration
-  # endregion
-fi
-
 # region Установить пакеты
 composer install
 # endregion
