@@ -2,20 +2,10 @@
 
 declare(strict_types=1);
 
-
 namespace App\Tests\Functional;
 
 use App\DataFixtures\UserAuthorizedFixtures;
 use App\Tests\Support\FunctionalTester;
-use Codeception\Attribute\DataProvider;
-use Codeception\Example;
-use Codeception\Util\HttpCode;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Dotenv\Dotenv;
-use Symfony\Component\HttpFoundation\ParameterBag;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 abstract class AbstractCest
 {
@@ -42,7 +32,7 @@ abstract class AbstractCest
                 url: '/api/login_check',
                 params: [
                     'username' => UserAuthorizedFixtures::EMAIL,
-                    'password' => UserAuthorizedFixtures::PASSWORD
+                    'password' => UserAuthorizedFixtures::PASSWORD,
                 ]
             );
             $I->seeResponseCodeIs(code: 200);
@@ -50,7 +40,7 @@ abstract class AbstractCest
 
             $I->haveHttpHeader(
                 name: 'Authorization',
-                value: 'Bearer ' . json_decode($I->grabResponse(), true)['token']
+                value: 'Bearer '.json_decode($I->grabResponse(), true)['token']
             );
         }
     }
