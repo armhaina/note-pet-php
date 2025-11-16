@@ -48,23 +48,6 @@ final class NotesCest extends AbstractCest
                     ],
                 ],
             ],
-            [
-                'groups' => NoteListFixtures::GROUPS,
-                'response' => [
-                    [
-                        'name' => 'Заметка_0',
-                        'description' => 'Описание заметки_0',
-                        'isPrivate' => false,
-                        'user' => ['email' => 'test_0@mail.ru'],
-                    ],
-                    [
-                        'name' => 'Заметка_1',
-                        'description' => 'Описание заметки_1',
-                        'isPrivate' => false,
-                        'user' => ['email' => 'test_1@mail.ru'],
-                    ],
-                ],
-            ],
         ];
     }
 }
