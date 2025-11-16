@@ -2,10 +2,10 @@
 .DS_Store
 
 .env
+node_modules
 
 *.log
 *.pid
-*/node_modules/*
 */dist/*
 
 ###> symfony/framework-bundle ###
