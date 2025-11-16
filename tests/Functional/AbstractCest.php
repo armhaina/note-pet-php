@@ -14,6 +14,11 @@ abstract class AbstractCest
         $I->haveHttpHeader(name: 'Content-Type', value: 'application/json');
     }
 
+    protected function fixturesLoad(FunctionalTester $I, array $groups): void
+    {
+        $this->commandDoctrineFixturesLoad(I: $I, groups: $groups);
+    }
+
     protected function authorized(FunctionalTester $I): void
     {
         $this->commandDoctrineFixturesLoad(I: $I, groups: UserAuthorizedFixtures::GROUPS);
@@ -34,20 +39,6 @@ abstract class AbstractCest
         );
     }
 
-    protected function commandDoctrineFixturesLoad(FunctionalTester $I, array $groups): void
-    {
-        $I->runSymfonyConsoleCommand(
-            command: 'doctrine:fixtures:load',
-            parameters: [
-                '--no-interaction' => '--no-interaction',
-                '--purge-with-truncate' => true,
-                '--group' => $groups,
-                '--env' => 'test',
-                '--append' => null,
-            ]
-        );
-    }
-
     protected static function except(array &$data, array $excludeKeys): array
     {
         foreach ($data as &$value) {
@@ -63,5 +54,19 @@ abstract class AbstractCest
         }
 
         return $data;
+    }
+
+    private function commandDoctrineFixturesLoad(FunctionalTester $I, array $groups = []): void
+    {
+        $I->runSymfonyConsoleCommand(
+            command: 'doctrine:fixtures:load',
+            parameters: [
+                '--no-interaction' => '--no-interaction',
+                '--purge-with-truncate' => true,
+                '--group' => $groups,
+                '--env' => 'test',
+                '--append' => null,
+            ]
+        );
     }
 }

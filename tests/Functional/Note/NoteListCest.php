@@ -16,7 +16,7 @@ final class NoteListCest extends AbstractCest
     #[DataProvider('successProvider')]
     public function tryToTest(FunctionalTester $I, Example $example): void
     {
-        $this->commandDoctrineFixturesLoad(I: $I, groups: $example['groups']);
+        $this->fixturesLoad(I: $I, groups: $example['groups']);
         $this->authorized(I: $I);
 
         $I->sendGet(url: '/api/v1/notes');
