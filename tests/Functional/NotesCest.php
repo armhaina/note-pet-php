@@ -17,32 +17,10 @@ use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-final class NotesCest extends AbstractHandleCest
+final class NotesCest extends AbstractCest
 {
     public function _before(FunctionalTester $I): void
     {
-        $I->runSymfonyConsoleCommand(
-            command: 'doctrine:fixtures:load',
-            parameters: [
-                '--no-interaction' => '--no-interaction',
-                '--purge-with-truncate' => true,
-                '--group' => ['user-authorized'],
-                '--env' => 'test',
-            ]
-        );
-
-        $I->haveHttpHeader(name: 'Content-Type', value: 'application/json');
-        $I->sendPost(
-            url: '/api/login_check',
-            params: [
-                'username' => UserAuthorizedFixtures::EMAIL,
-                'password' => UserAuthorizedFixtures::PASSWORD
-            ]
-        );
-        $I->seeResponseCodeIs(code: 200);
-        $I->seeResponseIsJson();
-
-        $I->haveHttpHeader(name: 'Authorization', value: 'Bearer ' . json_decode($I->grabResponse(), true)['token']);
     }
 
     /**
@@ -52,13 +30,17 @@ final class NotesCest extends AbstractHandleCest
     #[DataProvider('successProvider')]
     public function tryToTest(FunctionalTester $I, Example $example): void
     {
-        $I->sendGet(url: '/api/v1/notes');
+        $this->loadFixtures(I: $I, groups: $example['groups']);
 
+        $I->sendGet(url: '/api/v1/notes');
         $I->seeResponseCodeIs(code: HttpCode::OK);
         $I->seeResponseIsJson();
 //        $I->seeResponseContainsJson(json: $example['response']);
 
         $data = json_decode($I->grabResponse(), true);
+
+        $test = self::except(data: $data, excludeKeys: ['id']);
+
         $I->assertEquals(expected: $example['response'], actual: $data);
     }
 
@@ -66,7 +48,7 @@ final class NotesCest extends AbstractHandleCest
     {
         return [
             [
-                'request' => [],
+                'groups' => ['note-list'],
                 'response' => [
                     'ok' => true,
                     'result' => [
